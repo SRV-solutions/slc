@@ -1,5 +1,4 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
 import {
   AppBar,
   Toolbar,
@@ -11,88 +10,164 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-} from '@mui/material';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import MenuIcon from '@mui/icons-material/Menu';
+  Container,
+  Divider,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-const NavBar = ({ cartItemCount, logoSrc = '/SLC.png', onFilterCategory }) => {
+const NavBar = ({ cartItemCount, categories = ['Todas', 'Potrero', 'One Piece'], logoSrc = "/SLC.png" }) => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Leer categoría actual desde URL para resaltar o sincronizar si quieres
+  const currentCategory = searchParams.get('category') || 'Todas';
 
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
 
-  // Funciones para filtrar
-  const handleFilterPotrero = () => {
-    onFilterCategory('potrero');
+  const goToCategory = (category) => {
+    const params = new URLSearchParams(searchParams);
+    if (category && category !== "Todas") {
+      params.set("category", category);
+    } else {
+      params.delete("category");
+    }
+    // Opcional: limpiar otros params si quieres resetear
+    navigate(`/?${params.toString()}`);
+    handleMenuClose();
   };
 
-  const handleFilterOnePeace = () => {
-    onFilterCategory('one peace');
-  };
-
-  const handleFilterAll = () => {
-    onFilterCategory('Todas');
+  const goToCart = () => {
+    navigate("/cart");
+    handleMenuClose();
   };
 
   return (
-    <AppBar position="static" color="secondary" sx={{ px: 2 }}>
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, gap: 2 }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src={logoSrc} alt="Logo SLC" style={{ height: 60, marginRight: 10, borderRadius: 8 }} />
-          </Link>
+    <AppBar
+      position="sticky"
+      elevation={2}
+      color="secondary"
+      sx={{
+        color: "#fff",
+        py: 1,
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <Container maxWidth="xl">
+        <Toolbar sx={{ justifyContent: "space-between", alignItems: "center" }}>
+          {/* LOGOS */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box
+              component="img"
+              src={logoSrc}
+              alt="Logo SLC"
+              sx={{
+                height: 80,
+                borderRadius: 2,
+                cursor: "pointer",
+                transition: "transform 0.2s",
+                "&:hover": { transform: "scale(1.05)" },
+              }}
+              onClick={() => navigate("/")}
+            />
+            <Box
+              component="img"
+              src="/SRV.png"
+              alt="Logo SRV"
+              sx={{
+                height: 100,
+                borderRadius: 2,
+                cursor: "pointer",
+                transition: "transform 0.2s",
+                "&:hover": { transform: "scale(1.05)" },
+              }}
+              onClick={() => window.open("https://wearesrv.com", "_blank")}
+            />
+          </Box>
 
-          <Button variant="outlined" color="inherit" onClick={handleFilterPotrero}>
-            Potrero
-          </Button>
-          <Button variant="outlined" color="inherit" onClick={handleFilterOnePeace}>
-            One Peace
-          </Button>
-          <Button variant="outlined" color="inherit" onClick={handleFilterAll}>
-            Todos los productos
-          </Button>
-        </Box>
+          {/* Botones (desktop) */}
+          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
+            {categories.map((cat) => (
+              <Button
+                key={cat}
+                variant={currentCategory === cat ? "outlined" : "text"}
+                color="inherit"
+                sx={{
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  borderColor: currentCategory === cat ? "#fff" : "transparent",
+                  "&:hover": currentCategory === cat ? { backgroundColor: "#fff", color: "#000" } : {},
+                }}
+                onClick={() => goToCategory(cat)}
+              >
+                {cat === "One Piece" ? "One Peace" : cat}
+              </Button>
+            ))}
+            <Divider orientation="vertical" flexItem sx={{ mx: 2, bgcolor: "rgba(255,255,255,0.3)" }} />
+            <Tooltip title="Ver carrito">
+              <Button
+                color="inherit"
+                onClick={goToCart}
+                startIcon={
+                  <Badge badgeContent={cartItemCount} color="secondary" overlap="circular">
+                    <ShoppingCartIcon />
+                  </Badge>
+                }
+                sx={{ fontWeight: "bold", textTransform: "none" }}
+              >
+                Carrito
+              </Button>
+            </Tooltip>
+          </Box>
 
-        {/* Menu para pantallas pequeñas */}
-        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-          <IconButton color="inherit" onClick={handleMenuOpen}>
-            <MenuIcon />
-          </IconButton>
-          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-            <MenuItem component={Link} to="/" onClick={() => { handleMenuClose(); handleFilterAll(); }}>
-              Catálogo
-            </MenuItem>
-            <MenuItem component={Link} to="/cart" onClick={handleMenuClose}>
-              <Badge badgeContent={cartItemCount} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-              &nbsp;Carrito
-            </MenuItem>
-          </Menu>
-        </Box>
-
-        {/* Botones de carrito para pantallas grandes */}
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
-          <Button color="inherit" component={Link} to="/" sx={{ fontWeight: 'bold' }}>
-            Catálogo
-          </Button>
-          <Tooltip title="Ver carrito">
-            <Button
-              color="inherit"
-              component={Link}
-              to="/cart"
-              startIcon={
-                <Badge badgeContent={cartItemCount} color="secondary" overlap="circular">
+          {/* Menú móvil */}
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton color="inherit" onClick={handleMenuOpen}>
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              PaperProps={{
+                sx: {
+                  backgroundColor: "#2b2b2b",
+                  color: "#fff",
+                  mt: 1.5,
+                  borderRadius: 2,
+                  "& .MuiMenuItem-root:hover": {
+                    backgroundColor: "#444",
+                  },
+                },
+              }}
+            >
+              {categories.map((cat) => (
+                <MenuItem
+                  key={cat}
+                  selected={currentCategory === cat}
+                >
+                  {cat === "One Piece"}
+                </MenuItem>
+              ))}
+              <Divider sx={{ my: 1, bgcolor: "rgba(255,255,255,0.3)" }} />
+              <MenuItem onClick={goToCart}>
+                <Badge badgeContent={cartItemCount} color="secondary" sx={{ mr: 1 }}>
                   <ShoppingCartIcon />
                 </Badge>
-              }
-              sx={{ fontWeight: 'bold' }}
-            >
-              Carrito
-            </Button>
-          </Tooltip>
-        </Box>
-      </Toolbar>
+                Carrito
+              </MenuItem>
+            </Menu>
+          </Box>
+        </Toolbar>
+      </Container>
     </AppBar>
   );
 };
