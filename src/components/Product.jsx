@@ -22,14 +22,14 @@ const Product = ({ product, addToCart }) => {
   const [size, setSize] = useState('');
   const [customText, setCustomText] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-console.log(product);
 
-  const sizeOptions = (product.type === 'remera' || product.type === 'short' || product.type === 'campera')
+  const sizedTypes = ['Remera', 'shoShortrt', 'Campera', 'Conjunto deportivo', 'Conjunto'];
+
+  const sizeOptions = sizedTypes.includes(product.type)
     ? ['2', '4', '6', '8', '10', '12', '14', '16', 'S', 'M', 'L', 'XL', '2XL', '3XL', 'Personalizado']
     : [];
 
   const handleAddToCart = () => {
-    if (quantity < 1) return;
     if (sizeOptions.length > 0 && size === '') {
       alert('Por favor, seleccioná un talle.');
       return;
@@ -41,7 +41,10 @@ console.log(product);
       size: size === 'Personalizado' ? customText : size || undefined,
     };
     addToCart(productWithDetails);
-    setSnackbarOpen(true);
+    setSnackbarOpen(snackbarOpen);
+    
+    // Elimina alert para evitar bloqueo visual de Snackbar
+    // alert('Producto añadido al carrito correctamente.');
   };
 
   const handleSizeChange = (e) => {
@@ -49,7 +52,11 @@ console.log(product);
     if (e.target.value !== 'Personalizado') setCustomText('');
   };
 
-  const handleSnackbarClose = () => setSnackbarOpen(false);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setSnackbarOpen(false);
+  };
+    console.log(snackbarOpen);
 
   return (
     <>
@@ -107,12 +114,7 @@ console.log(product);
           {sizeOptions.length > 0 && (
             <FormControl variant="outlined" fullWidth sx={{ mb: 2 }}>
               <InputLabel id="size-label">Talle</InputLabel>
-              <Select
-                labelId="size-label"
-                value={size}
-                onChange={handleSizeChange}
-                label="Talle"
-              >
+              <Select labelId="size-label" value={size} onChange={handleSizeChange} label="Talle">
                 {sizeOptions.map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
@@ -141,7 +143,10 @@ console.log(product);
             color="primary"
             fullWidth
             onClick={handleAddToCart}
-            disabled={quantity < 1 || (sizeOptions.length > 0 && (size === '' || (size === 'Personalizado' && customText.trim() === '')))}
+            disabled={
+              quantity < 1 ||
+              (sizeOptions.length > 0 && (size === '' || (size === 'Personalizado' && customText.trim() === '')))
+            }
           >
             Añadir al Carrito
           </Button>

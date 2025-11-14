@@ -78,19 +78,6 @@ const NavBar = ({ cartItemCount, categories = ['Todas', 'Potrero', 'One Piece'],
               }}
               onClick={() => navigate("/")}
             />
-            <Box
-              component="img"
-              src="/SRV.png"
-              alt="Logo SRV"
-              sx={{
-                height: 100,
-                borderRadius: 2,
-                cursor: "pointer",
-                transition: "transform 0.2s",
-                "&:hover": { transform: "scale(1.05)" },
-              }}
-              onClick={() => window.open("https://wearesrv.com", "_blank")}
-            />
           </Box>
 
           {/* Botones (desktop) */}
@@ -117,7 +104,7 @@ const NavBar = ({ cartItemCount, categories = ['Todas', 'Potrero', 'One Piece'],
                 color="inherit"
                 onClick={goToCart}
                 startIcon={
-                  <Badge badgeContent={cartItemCount} color="secondary" overlap="circular">
+                  <Badge badgeContent={cartItemCount} color="primary" overlap="circular">
                     <ShoppingCartIcon />
                   </Badge>
                 }

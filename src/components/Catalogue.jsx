@@ -32,7 +32,7 @@ const Catalogue = ({ products }) => {
   const initialSortBy = searchParams.get('sortBy') || 'popularity';
 
   const productMaxPrice = useMemo(() => {
-    if (!products.length) return 50000;
+    if (!products.length) return 40000;    
     return Math.ceil(Math.max(...products.map((p) => p.price)));
   }, [products]);
 
@@ -177,14 +177,14 @@ const Catalogue = ({ products }) => {
           <InputLabel id="price-min-label">Precio Mín</InputLabel>
           <Select
             labelId="price-min-label"
-            value={priceMin}
+            value={priceMin}   
             label="Precio Mín"
             sx={{ borderRadius: 2, color: 'white' }}
 
             onChange={(e) => setPriceMin(Number(e.target.value))}
             fullWidth={isSmallScreen}
           >
-            {[0, 500, 1000, 2000, 3000, 5000, 10000].map((val) => (
+            {[0, 500, 1000, 2000, 3000, 5000, 10000, 40000].map((val) => (
               <MenuItem key={val} value={val}>{`$${val}`}</MenuItem>
             ))}
           </Select>
@@ -213,11 +213,10 @@ const Catalogue = ({ products }) => {
             value={priceMax}
             label="Precio Máx"
             sx={{ borderRadius: 2, color: 'white' }}
-
             onChange={(e) => setPriceMax(Number(e.target.value))}
             fullWidth={isSmallScreen}
           >
-            {[500, 1000, 2000, 3000, 5000, 10000, productMaxPrice].map((val) => (
+            {[500, 1000, 2000, 3000, 5000, 10000, 40000, productMaxPrice].map((val) => (
               <MenuItem key={val} value={val}>{`$${val}`}</MenuItem>
             ))}
           </Select>
