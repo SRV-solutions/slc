@@ -19,7 +19,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-const NavBar = ({ cartItemCount, categories = ['Todas', 'Potrero', 'One Piece'], logoSrc = "/SLC.png" }) => {
+const NavBar = ({ cartItemCount, categories = ['Todas'], logoSrc = "/SLC.png" }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -95,7 +95,7 @@ const NavBar = ({ cartItemCount, categories = ['Todas', 'Potrero', 'One Piece'],
                 }}
                 onClick={() => goToCategory(cat)}
               >
-                {cat === "One Piece" ? "One Peace" : cat}
+                {cat === "One Piece" ? "One Piece" : cat}
               </Button>
             ))}
             <Divider orientation="vertical" flexItem sx={{ mx: 2, bgcolor: "rgba(255,255,255,0.3)" }} />

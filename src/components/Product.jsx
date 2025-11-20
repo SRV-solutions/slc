@@ -23,10 +23,10 @@ const Product = ({ product, addToCart }) => {
   const [customText, setCustomText] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const sizedTypes = ['Remera', 'shoShortrt', 'Campera', 'Conjunto deportivo', 'Conjunto'];
+  const sizedTypes = ['Remera', 'Short', 'Campera', 'Conjunto deportivo', 'Conjunto'];
 
   const sizeOptions = sizedTypes.includes(product.type)
-    ? ['2', '4', '6', '8', '10', '12', '14', '16', 'S', 'M', 'L', 'XL', '2XL', '3XL', 'Personalizado']
+    ? [ 'S', 'M', 'L', 'XL', '2XL',]
     : [];
 
   const handleAddToCart = () => {
