@@ -23,7 +23,7 @@ const Product = ({ product, addToCart }) => {
   const [customText, setCustomText] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const sizedTypes = ['Remera', 'Short', 'Campera', 'Conjunto deportivo', 'Conjunto'];
+  const sizedTypes = ['Remera', 'Short', 'Campera', 'Conjunto deportivo', 'Conjunto', 'Pantalon'];
 
   const sizeOptions = sizedTypes.includes(product.type)
     ? [ 'S', 'M', 'L', 'XL', '2XL',]
