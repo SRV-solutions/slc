@@ -18,10 +18,6 @@ const App = () => {
   const [categoryFilter, setCategoryFilter] = useState('Todas');
 
 
-  // setear la query del filtro de categoría
-
-
-
   useEffect(() => {
     fetch("https://opensheet.elk.sh/1S2XyDil4a8lyqJZVjJmJGWefl3bqRQHqUjBm_MKpWQ0/Hoja1")
       .then((res) => res.json())
@@ -35,6 +31,12 @@ const App = () => {
           category: item.Categoria?.trim() || 'Sin categoría',
           type: item.Tipo?.trim() || '',
           popularity: item.Popularidad ? parseInt(item.Popularidad) : 0,
+          quantityAvalible: item.Cantidad ? item.Cantidad.split(',').map((item2) => (
+            {
+              size: item2.split(':')[0].trim(),
+              stock: parseInt(item2.split(':')[1].trim())
+            }
+          )) : null
         }));
         setProducts(formatted);
       })

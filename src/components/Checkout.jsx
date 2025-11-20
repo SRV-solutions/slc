@@ -57,6 +57,8 @@ const CheckoutForm = ({ cart, clearCart }) => {
       })
       .join('; ');
 
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+
     const form = new FormData();
     form.append('entry.2086094249', formData.nombre);
     form.append('entry.1784657494', formData.apellido);
@@ -66,6 +68,7 @@ const CheckoutForm = ({ cart, clearCart }) => {
     form.append('entry.1574738126', formData.fecha);
     form.append('entry.1104554283', productos);
     form.append('entry.181793812', 'Pendiente');
+    form.append('entry.1532488736', total);
 
     try {
       await fetch(

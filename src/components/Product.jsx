@@ -26,7 +26,7 @@ const Product = ({ product, addToCart }) => {
   const sizedTypes = ['Remera', 'Short', 'Campera', 'Conjunto deportivo', 'Conjunto', 'Pantalon'];
 
   const sizeOptions = sizedTypes.includes(product.type)
-    ? [ 'S', 'M', 'L', 'XL', '2XL',]
+    ? product.quantityAvalible.filter(item => item.stock != 0 && item.size).map(item => item.size)
     : [];
 
   const handleAddToCart = () => {
@@ -42,7 +42,7 @@ const Product = ({ product, addToCart }) => {
     };
     addToCart(productWithDetails);
     setSnackbarOpen(snackbarOpen);
-    
+
     // Elimina alert para evitar bloqueo visual de Snackbar
     // alert('Producto añadido al carrito correctamente.');
   };
@@ -56,7 +56,6 @@ const Product = ({ product, addToCart }) => {
     if (reason === 'clickaway') return;
     setSnackbarOpen(false);
   };
-    console.log(snackbarOpen);
 
   return (
     <>
