@@ -50,7 +50,15 @@ const CheckoutForm = ({ cart, clearCart }) => {
     const productos = cart
       .map((item) => {
         let details = `Código: ${item.id}, Producto: ${item.name}, Cantidad: ${item.quantity}, Precio: $${item.price}`;
-        if (item.type === 'remera' && item.size) {
+        console.log(item);
+        if (
+          (item.type === 'Remera' ||
+            item.type === 'Short' ||
+            item.type === 'Conjunto' ||
+            item.type === 'Conjunto deportivo' ||
+            item.type === 'Campera') &&
+          item.size
+        ) {
           details += `, Talle: ${item.size}`;
         }
         return details;
